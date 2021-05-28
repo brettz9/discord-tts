@@ -34,7 +34,7 @@ function downloadFromInfoCallback(stream, text, {
     const urlInfo = googleTTS.getAllAudioUrls(text, {
       lang, slow, host, timeout, splitPunct
     })
-    Promise.all(
+    return Promise.all(
       urlInfo.map(({url}) => {
         return new Promise((resolve, reject) => {
           https.get(url, (response, err) => {
@@ -62,11 +62,11 @@ function downloadFromInfoCallback(stream, text, {
  * @param {number} cfg.timeout
  * @param {string} cfg.splitPunct
  */
-function getVoiceStream(text, {
+async function getVoiceStream(text, {
   lang = 'en-GB', slow = false, host, timeout, splitPunct
 } = {}) {
     const stream = new Stream.PassThrough();
-    downloadFromInfoCallback(stream, text, {
+    await downloadFromInfoCallback(stream, text, {
       lang, slow, host, timeout, splitPunct
     });
     return stream;
